@@ -1,4 +1,4 @@
-ProductID,ProductName,Category,UnitPrice,StockStatus,StockQuanity 
+ProductID,ProductName,Category,UnitPrice,StockStatus,StockQuantity 
 2000,Electronics-Signal,Electronics,969.31,In Stock ,10
 2001,Electronics-Boost,Electronics,412.35,In Stock ,4
 2002,Office-Family,Office,866,In Stock ,22
