@@ -28,64 +28,79 @@ from pathlib import Path
 
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-RAW_FILE = PROJECT_ROOT / "data" / "raw" / "customers_data.csv"
-PREPARED_FILE = PROJECT_ROOT / "data" / "prepared" / "customers_data_prepared.csv"
-LOG_FILE = PROJECT_ROOT / "logs" / "prepare_customers_data.log"
 
-PREPARED_FILE.parent.mkdir(parents=True, exist_ok=True)
-LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+class CustomerDataPreparer:
+    def __init__(self, project_root: Path = None):
+        self.project_root = project_root or Path(__file__).resolve().parents[3]
+        self.raw_file = self.project_root / "data" / "raw" / "customers_data.csv"
+        self.prepared_file = (
+            self.project_root / "data" / "prepared" / "customers_data_prepared.csv"
+        )
+        self.log_file = self.project_root / "logs" / "prepare_customers_data.log"
 
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    filemode="w",
-)
+        self._setup_directories()
+        self._setup_logging()
+        self.logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
+    def _setup_directories(self) -> None:
+        self.prepared_file.parent.mkdir(parents=True, exist_ok=True)
+        self.log_file.parent.mkdir(parents=True, exist_ok=True)
 
+    def _setup_logging(self) -> None:
+        logging.basicConfig(
+            filename=self.log_file,
+            level=logging.INFO,
+            format="%(asctime)s | %(levelname)s | %(message)s",
+            filemode="w",
+        )
 
-def prepare_customers() -> None:
-    """Load, clean, validate, and save customer data."""
-    df = pd.read_csv(RAW_FILE)
-    raw_count = len(df)
+    def prepare(self) -> None:
+        """Load, clean, validate, and save customer data."""
+        df = pd.read_csv(self.raw_file)
+        raw_count = len(df)
+        self.logger.info("Loaded %s raw customer records.", raw_count)
 
-    logger.info("Loaded %s raw customer records.", raw_count)
+        df = self._remove_duplicates(df)
+        df = self._clean_text_fields(df)
+        df = self._process_dates(df)
+        df = self._select_columns(df)
 
-    # Remove exact duplicate rows.
-    df = df.drop_duplicates()
+        df.to_csv(self.prepared_file, index=False)
 
-    # Remove duplicate customer IDs, keeping the first record.
-    df = df.drop_duplicates(subset=["CustomerID"], keep="first")
+        self.logger.info("Saved %s prepared customer records.", len(df))
+        self.logger.info("Removed %s customer records.", raw_count - len(df))
+        print(f"Customers: {raw_count} raw -> {len(df)} prepared")
 
-    # Clean text fields.
-    df["Name"] = df["Name"].astype(str).str.strip().str.title()
-    df["Region"] = (
-        df["Region"]
-        .astype(str)
-        .str.strip()
-        .str.replace("-", " ", regex=False)
-        .str.title()
-    )
+    @staticmethod
+    def _remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
+        df = df.drop_duplicates()
+        df = df.drop_duplicates(subset=["CustomerID"], keep="first")
+        return df
 
-    # Convert the date and remove invalid dates.
-    df["JoinDate"] = pd.to_datetime(df["JoinDate"], errors="coerce")
-    df = df.dropna(subset=["CustomerID", "Name", "Region", "JoinDate"])
+    @staticmethod
+    def _clean_text_fields(df: pd.DataFrame) -> pd.DataFrame:
+        df["Name"] = df["Name"].astype(str).str.strip().str.title()
+        df["Region"] = (
+            df["Region"]
+            .astype(str)
+            .str.strip()
+            .str.replace("-", " ", regex=False)
+            .str.title()
+        )
+        return df
 
-    # Restore the standard YYYY-MM-DD date format.
-    df["JoinDate"] = df["JoinDate"].dt.strftime("%Y-%m-%d")
+    @staticmethod
+    def _process_dates(df: pd.DataFrame) -> pd.DataFrame:
+        df["JoinDate"] = pd.to_datetime(df["JoinDate"], errors="coerce")
+        df = df.dropna(subset=["CustomerID", "Name", "Region", "JoinDate"])
+        df["JoinDate"] = df["JoinDate"].dt.strftime("%Y-%m-%d")
+        return df
 
-    # Keep the expected columns in the expected order.
-    df = df[["CustomerID", "Name", "Region", "JoinDate"]]
-
-    df.to_csv(PREPARED_FILE, index=False)
-
-    logger.info("Saved %s prepared customer records.", len(df))
-    logger.info("Removed %s customer records.", raw_count - len(df))
-
-    print(f"Customers: {raw_count} raw -> {len(df)} prepared")
+    @staticmethod
+    def _select_columns(df: pd.DataFrame) -> pd.DataFrame:
+        return df[["CustomerID", "Name", "Region", "JoinDate"]]
 
 
 if __name__ == "__main__":
-    prepare_customers()
+    preparer = CustomerDataPreparer()
+    preparer.prepare()

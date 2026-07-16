@@ -23,77 +23,48 @@ Common cleaning and preparation tasks include:
 - Normalize inconsistent values (e.g., "East", "east", " EAST ").
 - Convert data types (e.g., text to numeric, text to datetime)."""
 
+from dataclasses import dataclass, field
 import logging
 from pathlib import Path
 
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-RAW_FILE = PROJECT_ROOT / "data" / "raw" / "sales_data.csv"
-PREPARED_FILE = PROJECT_ROOT / "data" / "prepared" / "sales_data_prepared.csv"
-LOG_FILE = PROJECT_ROOT / "logs" / "prepare_sales_data.log"
 
-PREPARED_FILE.parent.mkdir(parents=True, exist_ok=True)
-LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+@dataclass
+class SalesConfig:
+    project_root: Path = None
+    required_columns: list[str] = field(
+        default_factory=lambda: [
+            "TransactionID",
+            "SaleDate",
+            "CustomerID",
+            "ProductID",
+            "StoreID",
+            "SaleAmount",
+        ]
+    )
+    outlier_multiplier: float = 1.5
+    default_campaign_id: int = 0
 
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    filemode="w",
-)
+    def __post_init__(self):
+        if self.project_root is None:
+            self.project_root = Path(__file__).resolve().parents[3]
 
-logger = logging.getLogger(__name__)
+    @property
+    def raw_file(self) -> Path:
+        return self.project_root / "data" / "raw" / "sales_data.csv"
 
+    @property
+    def prepared_file(self) -> Path:
+        return self.project_root / "data" / "prepared" / "sales_data_prepared.csv"
 
-def prepare_sales() -> None:
-    """Load, clean, validate, and save sales data."""
-    df = pd.read_csv(RAW_FILE)
-    raw_count = len(df)
+    @property
+    def log_file(self) -> Path:
+        return self.project_root / "logs" / "prepare_sales_data.log"
 
-    logger.info("Loaded %s raw sales records.", raw_count)
-
-    # Remove exact duplicates and duplicate transaction IDs.
-    df = df.drop_duplicates()
-    df = df.drop_duplicates(subset=["TransactionID"], keep="first")
-
-    # Convert columns to their correct data types.
-    df["SaleDate"] = pd.to_datetime(df["SaleDate"], errors="coerce")
-    df["SaleAmount"] = pd.to_numeric(df["SaleAmount"], errors="coerce")
-    df["CampaignID"] = pd.to_numeric(df["CampaignID"], errors="coerce")
-
-    # Treat a missing campaign as no campaign.
-    df["CampaignID"] = df["CampaignID"].fillna(0).astype(int)
-
-    # Remove records missing required information.
-    required_columns = [
-        "TransactionID",
-        "SaleDate",
-        "CustomerID",
-        "ProductID",
-        "StoreID",
-        "SaleAmount",
-    ]
-    df = df.dropna(subset=required_columns)
-
-    # Remove zero or negative sales amounts.
-    df = df[df["SaleAmount"] > 0]
-
-    # Remove extreme SaleAmount outliers using the IQR method.
-    q1 = df["SaleAmount"].quantile(0.25)
-    q3 = df["SaleAmount"].quantile(0.75)
-    iqr = q3 - q1
-    lower_limit = max(0, q1 - 1.5 * iqr)
-    upper_limit = q3 + 1.5 * iqr
-
-    df = df[(df["SaleAmount"] >= lower_limit) & (df["SaleAmount"] <= upper_limit)]
-
-    # Restore the standard YYYY-MM-DD date format.
-    df["SaleDate"] = df["SaleDate"].dt.strftime("%Y-%m-%d")
-
-    # Keep the expected columns in the expected order.
-    df = df[
-        [
+    @property
+    def output_columns(self) -> list[str]:
+        return [
             "TransactionID",
             "SaleDate",
             "CustomerID",
@@ -102,15 +73,87 @@ def prepare_sales() -> None:
             "CampaignID",
             "SaleAmount",
         ]
-    ]
 
-    df.to_csv(PREPARED_FILE, index=False)
 
-    logger.info("Saved %s prepared sales records.", len(df))
-    logger.info("Removed %s sales records.", raw_count - len(df))
+class SalesDataPreparer:
+    def __init__(self, config: SalesConfig = None):
+        self.config = config or SalesConfig()
+        self._setup_directories()
+        self._setup_logging()
+        self.logger = logging.getLogger(__name__)
 
-    print(f"Sales: {raw_count} raw -> {len(df)} prepared")
+    def _setup_directories(self) -> None:
+        self.config.prepared_file.parent.mkdir(parents=True, exist_ok=True)
+        self.config.log_file.parent.mkdir(parents=True, exist_ok=True)
+
+    def _setup_logging(self) -> None:
+        logging.basicConfig(
+            filename=self.config.log_file,
+            level=logging.INFO,
+            format="%(asctime)s | %(levelname)s | %(message)s",
+            filemode="w",
+        )
+
+    def prepare(self) -> None:
+        """Load, clean, validate, and save sales data."""
+        df = pd.read_csv(self.config.raw_file)
+        raw_count = len(df)
+        self.logger.info("Loaded %s raw sales records.", raw_count)
+
+        df = self._remove_duplicates(df)
+        df = self._convert_data_types(df)
+        df = self._handle_missing_campaign(df)
+        df = self._remove_invalid_records(df)
+        df = self._remove_outliers(df)
+        df = self._format_dates(df)
+        df = self._select_columns(df)
+
+        df.to_csv(self.config.prepared_file, index=False)
+
+        self.logger.info("Saved %s prepared sales records.", len(df))
+        self.logger.info("Removed %s sales records.", raw_count - len(df))
+        print(f"Sales: {raw_count} raw -> {len(df)} prepared")
+
+    @staticmethod
+    def _remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
+        df = df.drop_duplicates()
+        return df.drop_duplicates(subset=["TransactionID"], keep="first")
+
+    @staticmethod
+    def _convert_data_types(df: pd.DataFrame) -> pd.DataFrame:
+        df["SaleDate"] = pd.to_datetime(df["SaleDate"], errors="coerce")
+        df["SaleAmount"] = pd.to_numeric(df["SaleAmount"], errors="coerce")
+        df["CampaignID"] = pd.to_numeric(df["CampaignID"], errors="coerce")
+        return df
+
+    def _handle_missing_campaign(self, df: pd.DataFrame) -> pd.DataFrame:
+        df["CampaignID"] = (
+            df["CampaignID"].fillna(self.config.default_campaign_id).astype(int)
+        )
+        return df
+
+    def _remove_invalid_records(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.dropna(subset=self.config.required_columns)
+        return df[df["SaleAmount"] > 0]
+
+    def _remove_outliers(self, df: pd.DataFrame) -> pd.DataFrame:
+        q1 = df["SaleAmount"].quantile(0.25)
+        q3 = df["SaleAmount"].quantile(0.75)
+        iqr = q3 - q1
+        lower_limit = max(0, q1 - self.config.outlier_multiplier * iqr)
+        upper_limit = q3 + self.config.outlier_multiplier * iqr
+        return df[(df["SaleAmount"] >= lower_limit) & (df["SaleAmount"] <= upper_limit)]
+
+    @staticmethod
+    def _format_dates(df: pd.DataFrame) -> pd.DataFrame:
+        df["SaleDate"] = df["SaleDate"].dt.strftime("%Y-%m-%d")
+        return df
+
+    def _select_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[self.config.output_columns]
 
 
 if __name__ == "__main__":
-    prepare_sales()
+    config = SalesConfig()
+    preparer = SalesDataPreparer(config)
+    preparer.prepare()
