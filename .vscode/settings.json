@@ -39,5 +39,6 @@
       ".github/workflows/*.yml",
       ".github/workflows/*.yaml"
     ]
-  }
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:venv"
 }
