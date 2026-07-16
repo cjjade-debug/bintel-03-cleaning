@@ -21,11 +21,7 @@ Common cleaning and preparation tasks include:
 - Remove duplicate rows.
 - Remove rows with missing or invalid values.
 - Normalize inconsistent values (e.g., "East", "east", " EAST ").
-- Convert data types (e.g., text to numeric, text to datetime).
-
-Author: Cassie J. McCoin
-Date: 2026-07
-"""
+- Convert data types (e.g., text to numeric, text to datetime)."""
 
 import logging
 from pathlib import Path
