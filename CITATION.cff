@@ -21,8 +21,12 @@ authors:
     orcid: "https://orcid.org/0000-0001-6165-7389"
     affiliation: "Northwest Missouri State University, School of Computer Science and Information Systems, Maryville, MO, USA"
 
-repository-code: "https://github.com/denisecase/bintel-03-cleaning"
-url: "https://github.com/denisecase/bintel-03-cleaning"
+ family-names: McCoin
+    given-names: Cassie J.
+    affiliation: "Northwest Missouri State University, Maryville, MO, USA"
+
+repository-code: "https://github.com/cjjade-debug/bintel-03-cleaning"
+url: "https://github.com/cjjade-debug/bintel-03-cleaning"
 license: MIT
 
 abstract: >

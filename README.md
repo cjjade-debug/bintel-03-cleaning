@@ -1,4 +1,4 @@
-# bintel-03-cleaning
+# BI Cleaning Raw Data Project
 
 [![Workflow Guide](https://img.shields.io/badge/Pro--Guide-pro--analytics--02-green)](https://denisecase.github.io/pro-analytics-02/workflow-b-apply-example-project/)
 [![Python 3.14](https://img.shields.io/badge/python-3.14%2B-blue?logo=python)](./pyproject.toml)
@@ -78,7 +78,7 @@ open a machine terminal in your `Repos` folder:
 
 ```shell
 # Replace username with YOUR GitHub username.
-git clone https://github.com/username/bintel-03-cleaning
+git clone https://github.com/cjjade-debug/bintel-03-cleaning
 
 cd bintel-03-cleaning
 code .
