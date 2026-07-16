@@ -1,4 +1,31 @@
-"""Clean  raw sales data."""
+"""Clean Raw Sales Data
+
+An example of cleaning and preparing raw smart sales data.
+Cleaning and preparation is a critical step in any BI workflow.
+It is different for every project and every dataset.
+
+This example is designed to be copied and modified.
+On new datasets, you will need to change the cleaning and preparation logic.
+This example is only an illustration.
+
+Cleaning can be 80-90% of the work in a BI project.
+It is often the most time-consuming step and
+to do it well requires domain knowledge, attention to detail,
+tenacity, and resourcefulness.
+
+It is often the most important step because
+if the data is not clean, the analysis will be wrong and
+the business decisions will be wrong.
+
+Common cleaning and preparation tasks include:
+- Remove duplicate rows.
+- Remove rows with missing or invalid values.
+- Normalize inconsistent values (e.g., "East", "east", " EAST ").
+- Convert data types (e.g., text to numeric, text to datetime).
+
+Author: Cassie J. McCoin
+Date: 2026-07
+"""
 
 import logging
 from pathlib import Path
