@@ -64,7 +64,7 @@ SALES_FILE: Final[Path] = DATA_RAW / "sales_data.csv"
 # A pandas DataFrame is like a sheet - two-dimensional data with rows and columns.
 
 
-def sales_by_region(
+def sales_by_region(  # type: ignore
     df_customers: pd.DataFrame,
     df_sales: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -130,6 +130,50 @@ def sales_by_region(
 
     LOG.info("Returning DataFrame with total sales by region")
     return df_region
+
+
+def sales_by_region(  # noqa: F811
+    df_customers: pd.DataFrame,
+    df_sales: pd.DataFrame,
+) -> None:
+    """Aggregate total sales amount by customer region and display as pie chart.
+
+    Args:
+        df_customers: Customers DataFrame with CustomerID and Region columns.
+        df_sales: Sales DataFrame with CustomerID and SaleAmount columns.
+    """
+    LOG.info("Aggregating sales by region")
+
+    df_sales = df_sales.copy()
+    df_sales["SaleAmount"] = pd.to_numeric(df_sales["SaleAmount"], errors="coerce")
+
+    df_merged: pd.DataFrame = df_sales.merge(
+        df_customers[["CustomerID", "Region"]],
+        on="CustomerID",
+        how="left",
+    )
+
+    df_merged["Region"] = df_merged["Region"].str.strip().str.title()
+    grouped: pd.Series = pd.Series(df_merged.groupby("Region")["SaleAmount"].sum())
+    df_region: pd.DataFrame = grouped.reset_index().sort_values(
+        "SaleAmount", ascending=False
+    )
+
+    top_region: str = str(df_region.iloc[0]["Region"])
+    top_sales: float = float(df_region.iloc[0]["SaleAmount"])
+    LOG.info(f"  Top region: {top_region} (${top_sales:,.2f})")
+
+    # Create pie chart
+    plt.figure(figsize=(10, 8))
+    plt.pie(
+        df_region["SaleAmount"],
+        labels=df_region["Region"],
+        autopct="%1.1f%%",
+        startangle=90,
+    )
+    plt.title("Sales by Region")
+    plt.tight_layout()
+    plt.show()
 
 
 # === Section 2.2 DEFINE A SALES BY CATEGORY FUNCTION ===
