@@ -55,13 +55,11 @@ What cleaning took place within the data sets?
 
 ### Before and After
 
-Describe the impact of your cleaning work.
+![Sales Distrubution by Payment Type](/docs/images/P3_Phase5.1.jpg)
 
-Include:
-
-- How many rows were removed or corrected in each table
-- What the data looked like before and after (use screenshots or log output)
-- Whether any cleaning decisions were judgment calls and why you made them
+- Customer raw data was 201, cleaned is 200
+- Products raw data was 100, cleaned is 100
+- Sales raw data was 2400, cleaned 2182
 
 ### Summary
 
@@ -76,4 +74,4 @@ Include:
 
 ### Images
 
-![Sales Distrubution by Payment Type](/.docs/images/Figure_4.png)
+![Sales Distrubution by Payment Type](/docs/images/Figure_4.png)
