@@ -76,4 +76,4 @@ Include:
 
 ### Images
 
-![Sales Distrubution by Payment Type](/docs/images/Figure_4.png)
+![Sales Distrubution by Payment Type](/.docs/images/Figure_4.png)
