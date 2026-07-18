@@ -39,9 +39,10 @@ It helps to anticipate and/or evaluate buying trends by knowing how and when cus
 ### Basis and Data
 
 **CJ Jade's Data Files Descriptions**
--customers_data.csv: this file gives the basic customer information, such as name, region, join date, spending score and tier level.
--products_data.csv: this file gives information on the products such as name, category, unit price, stock quantity, and stock status
--sales_data.csv: this files gives sales information such as customer ID, product ID, Sale date, transaction, store ID, sale amount, discount amount, and payment type.
+
+- customers_data.csv: this file gives the basic customer information, such as name, region, join date, spending score and tier level.
+- products_data.csv: this file gives information on the products such as name, category, unit price, stock quantity, and stock status
+- sales_data.csv: this files gives sales information such as customer ID, product ID, Sale date, transaction, store ID, sale amount, discount amount, and payment type.
 
 Include:
 
