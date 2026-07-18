@@ -21,20 +21,20 @@ to get the example projects running on your machine.
 
 ## Phase 4. CJ Jade's Technical Modification
 
-Week 3's Project was centered around BI cleaning of raw data, and processing that data into what we named as "prerpared" files.
+Week 3's Project was centered around BI cleaning of raw data, and processing that data into what we named as "prepared" files.
 
-- The modification that was made was taking the data from the bar graph, and converting that data into a pie chart. The pie chart was then labled, and displayed the percentages of each region.
+- The modification that was made was taking the data from the bar graph, and converting that data into a pie chart. The pie chart was then labeled, and displayed the percentages of each region.
 - When looking at sales and regions knowing numbers can help give a better picture, when you move into goals and storytelling.
 - One way I verified that my modification worked, was by ensuring there were no problems. After that I ran the code, when the new chart appear I knew the code had worked.
 - The biggest result was that running this code properly created a third chart, which showed the sales of each regions and their percentages.
-- The biggest challenged faced this week, was ensuring that the codes were written corrcetly. This took some time, and alot of reseach from YouTube, CoPilot, and even REDDIT.
+- The biggest challenged faced this week, was ensuring that the codes were written correctly. This took some time, and a lot of research from YouTube, CoPilot, and even REDDIT.
 
 ## Phase 5. Week 3's Custom Project Basics
 
 The custom modification was done in a couple different parts. The first part was done earlier this week, during the analysis of the data. Two new columns were created for each one of the datasets.
 
 The custom project I took on was creating a pie chart to show the percentages of the different payment types. The reason I did this, was because it's vital for businesses to keep track of this data.
-It helps to anticipate and/or evaluate buying trends by knowing how and when customers are using certains types of payment tenders.
+It helps to anticipate and/or evaluate buying trends by knowing how and when customers are using certain types of payment tenders.
 
 ### CJ Jade's Data Files Descriptions
 
@@ -47,10 +47,10 @@ It helps to anticipate and/or evaluate buying trends by knowing how and when cus
 What cleaning took place within the data sets?
 
 - Removing Duplicates
-- Formating Columns and Rows
+- Formatting Columns and Rows
 - Standardizing Columns and Rows
 - Computing and/or Converting Numerical Data
-- Removing Invaild Data
+- Removing Invalid Data
 - Removing/Converting Missing Data
 
 ### Before and After
@@ -61,19 +61,19 @@ What cleaning took place within the data sets?
 - Products raw data was 100, cleaned is 100
 - Sales raw data was 2400, cleaned 2182
 
-### Real-World Thoughts & Quality Conotrol
+### Real-World Thoughts & Quality Control
 
 - Cleaning data is one of the most vital steps of processing data.
 - This process not only takes time, but it also takes concentration, and high levels of detail. No matter the field cleaning data is an important aspect of everyday business life.
-- **Just remember,** if the data is inaccurate then the results will be **wrong**---and that can cost the business alot of money when making decisions down the road.
+- **Just remember,** if the data is inaccurate then the results will be **wrong**---and that can cost the business a lot of money when making decisions down the road.
 
 ### Final Thoughts
 
-Cleaning data takes alot of time, this should be common knowledge.
-There are many programs outside making codes in python. My perferred method is Tableau or Excel.
+Cleaning data takes a lot of time, this should be common knowledge.
+There are many programs outside making codes in python. My preferred method is Tableau or Excel.
 The important take away, is that cleaning the data should be a high priority. There should be no short cuts, because you'll want it done correctly the first time.
-Humans are humans, mistakes will happen but that's why you create checkpoints. Finding a mistake early can save money, and maye even a project.
+Humans are humans, mistakes will happen but that's why you create checkpoints. Finding a mistake early can save money, and maybe even a project.
 
 ### Images
 
-![Sales Distrubution by Payment Type](/docs/images/Figure_4.png)
+![Sales Distrubution by Payment Type](C:\Repos\bintel-03-cleaning\docs\images\Figure_4.png)
