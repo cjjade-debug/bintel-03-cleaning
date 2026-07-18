@@ -74,4 +74,6 @@ Include:
 - What you learned about data quality
 - What kinds of real business problems data cleaning enables
 
-Display at least one chart or screenshot showing your before and after results.
+### Images
+
+![Sales Distrubution by Payment Type](/docs/images/Figure_4.png)
