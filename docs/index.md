@@ -61,16 +61,18 @@ What cleaning took place within the data sets?
 - Products raw data was 100, cleaned is 100
 - Sales raw data was 2400, cleaned 2182
 
-### Summary
+### Real-World Thoughts & Quality Conotrol
 
-Summarize your custom cleaning work.
+- Cleaning data is one of the most vital steps of processing data.
+- This process not only takes time, but it also takes concentration, and high levels of detail. No matter the field cleaning data is an important aspect of everyday business life.
+- **Just remember,** if the data is inaccurate then the results will be **wrong**---and that can cost the business alot of money when making decisions down the road.
 
-Include:
+### Final Thoughts
 
-- What you implemented beyond the example
-- What the prepared data looks like
-- What you learned about data quality
-- What kinds of real business problems data cleaning enables
+Cleaning data takes alot of time, this should be common knowledge.
+There are many programs outside making codes in python. My perferred method is Tableau or Excel.
+The important take away, is that cleaning the data should be a high priority. There should be no short cuts, because you'll want it done correctly the first time.
+Humans are humans, mistakes will happen but that's why you create checkpoints. Finding a mistake early can save money, and maye even a project.
 
 ### Images
 
