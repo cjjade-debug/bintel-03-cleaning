@@ -55,7 +55,7 @@ What cleaning took place within the data sets?
 
 ### Before and After
 
-![Sales Distrubution by Payment Type](/.docs/images/P3_Phase5.1.jpg)
+![Sales Distrubution by Payment Type](./images/P3_Phase5.1.jpg)
 
 - Customer raw data was 201, cleaned is 200
 - Products raw data was 100, cleaned is 100
@@ -76,4 +76,4 @@ Humans are humans, mistakes will happen but that's why you create checkpoints. F
 
 ### Images
 
-![Sales Distrubution by Payment Type](/docs/images/Figure_4.png)
+![Sales Distribution by Payment Type](./images/Figure_4.png)
